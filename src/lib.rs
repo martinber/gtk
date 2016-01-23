@@ -126,8 +126,6 @@ pub const STYLE_PROVIDER_PRIORITY_USER: i32 = ffi::GTK_STYLE_PROVIDER_PRIORITY_U
 #[macro_use]
 mod rt;
 
-mod auto;
-
 mod app_chooser;
 mod builder;
 mod color_button;
@@ -144,6 +142,7 @@ mod recent_data;
 mod recent_info;
 mod rectangle;
 mod requisition;
+#[macro_use]
 mod signal;
 #[cfg(target_os = "linux")]
 mod socket;
@@ -157,6 +156,7 @@ mod tree_store;
 mod tree_view;
 mod widget;
 
+mod auto;
 pub mod prelude;
 
 pub use auto::*;

@@ -12,7 +12,7 @@ use glib::translate::*;
 use glib::ParamSpec;
 
 use glib_ffi::{self, gboolean, gpointer};
-use ffi::{GtkAdjustment, GtkTreeSelection, GtkTreeViewColumn};
+use ffi::{GtkAdjustment, /*GtkTreeSelection,*/ GtkTreeViewColumn};
 use gdk::{
     EventAny,
     EventButton,
@@ -41,7 +41,7 @@ use {
     TextDirection,
     TreeIter,
     TreePath,
-    TreeSelection,
+//    TreeSelection,
     TreeViewColumn,
     WidgetHelpType,
 };
@@ -63,7 +63,7 @@ impl ToGlib for Inhibit {
 
 pub use glib::source::Continue;
 
-struct CallbackGuard;
+pub struct CallbackGuard;
 
 impl Drop for CallbackGuard {
     fn drop(&mut self) {
@@ -1476,7 +1476,7 @@ unsafe extern "C" fn adjustment_trampoline(this: *mut GtkAdjustment, f: &Box<Fn(
         callback_guard!();
     f(&from_glib_none(this))
 }
-
+/*
 impl TreeSelection {
     pub fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> u64 {
         unsafe {
@@ -1492,7 +1492,7 @@ unsafe extern "C" fn tree_selection_trampoline(this: *mut GtkTreeSelection,
         callback_guard!();
     f(&from_glib_none(this))
 }
-
+*/
 impl TreeViewColumn {
     pub fn connect_clicked<F: Fn(&Self) + 'static>(&self, f: F) -> u64 {
         unsafe {

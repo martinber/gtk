@@ -9,6 +9,10 @@ use TreeView;
 use ffi;
 use glib::translate::*;
 use std::ptr;
+use ffi::GtkTreeSelection;
+use signal::CallbackGuard;
+use glib::signal::connect;
+use std::mem::transmute;
 
 glib_wrapper! {
     pub struct TreeSelection(Object<ffi::GtkTreeSelection>);
@@ -135,4 +139,20 @@ impl TreeSelection {
             ffi::gtk_tree_selection_unselect_range(self.to_glib_none().0, mut_override(start_path.to_glib_none().0), mut_override(end_path.to_glib_none().0));
         }
     }
+}
+
+impl TreeSelection {
+    pub fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> u64 {
+        unsafe {
+            let f: Box<Box<Fn(&Self) + 'static>> = Box::new(Box::new(f));
+            connect(self.to_glib_none().0, "changed",
+                transmute(tree_selection_trampoline), Box::into_raw(f) as *mut _)
+        }
+    }
+}
+
+unsafe extern "C" fn tree_selection_trampoline(this: *mut GtkTreeSelection,
+        f: &Box<Fn(&TreeSelection) + 'static>) {
+        callback_guard!();
+    f(&from_glib_none(this))
 }

@@ -7,14 +7,22 @@ use CellArea;
 use CellEditable;
 use CellLayout;
 use Container;
+use Object;
+use ScrollType;
 use SensitivityType;
 use TreeIter;
 use TreeModel;
 use Widget;
 use ffi;
+use ffi::GtkComboBox;
 use glib::object::Downcast;
 use glib::object::IsA;
 use glib::translate::*;
+use glib_ffi::gboolean;
+use signal::CallbackGuard;
+use glib::signal::connect;
+use std::mem::transmute;
+
 
 glib_wrapper! {
     pub struct ComboBox(Object<ffi::GtkComboBox>): Widget, Container, Bin, Buildable, CellEditable, CellLayout;
@@ -344,4 +352,68 @@ impl<O: IsA<ComboBox>> ComboBoxExt for O {
             ffi::gtk_combo_box_set_wrap_width(self.to_glib_none().0, width);
         }
     }
+}
+
+//---
+
+pub trait ComboBoxSignals {
+    fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> u64;
+    fn connect_move_active<F: Fn(&Self, ScrollType) + 'static>(&self, f: F) -> u64;
+    fn connect_popdown<F: Fn(&Self) -> bool + 'static>(&self, f: F) -> u64;
+    fn connect_popup<F: Fn(&Self) + 'static>(&self, f: F) -> u64;
+}
+
+impl<T: IsA<ComboBox> + IsA<Object>> ComboBoxSignals for T {
+    fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> u64 {
+        unsafe {
+            let f: Box<Box<Fn(&Self) + 'static>> = Box::new(Box::new(f));
+            connect(self.to_glib_none().0, "changed",
+                transmute(void_trampoline::<Self>), Box::into_raw(f) as *mut _)
+        }
+    }
+
+    fn connect_move_active<F: Fn(&Self, ScrollType) + 'static>(&self, f: F) -> u64 {
+        unsafe {
+            let f: Box<Box<Fn(&Self, ScrollType) + 'static>> = Box::new(Box::new(f));
+            connect(self.to_glib_none().0, "move-active",
+                transmute(move_trampoline::<Self>), Box::into_raw(f) as *mut _)
+        }
+    }
+
+    fn connect_popdown<F: Fn(&Self) -> bool + 'static>(&self, f: F) -> u64 {
+        unsafe {
+            let f: Box<Box<Fn(&Self) -> bool + 'static>> = Box::new(Box::new(f));
+            connect(self.to_glib_none().0, "popdown",
+                transmute(bool_trampoline::<Self>), Box::into_raw(f) as *mut _)
+        }
+    }
+
+    fn connect_popup<F: Fn(&Self) + 'static>(&self, f: F) -> u64 {
+        unsafe {
+            let f: Box<Box<Fn(&Self) + 'static>> = Box::new(Box::new(f));
+            connect(self.to_glib_none().0, "popup",
+                transmute(void_trampoline::<Self>), Box::into_raw(f) as *mut _)
+        }
+    }
+}
+
+unsafe extern "C" fn void_trampoline<T>(this: *mut GtkComboBox,
+    f: &Box<Fn(&ComboBox) + 'static>)
+where T: IsA<ComboBox> + IsA<Object> {
+    callback_guard!();
+    f(&from_glib_none(this));
+}
+
+unsafe extern "C" fn bool_trampoline<T>(this: *mut GtkComboBox,
+    f: &Box<Fn(&ComboBox) -> bool + 'static>) -> gboolean
+where T: IsA<ComboBox> + IsA<Object> {
+    callback_guard!();
+    f(&from_glib_none(this)).to_glib()
+}
+
+unsafe extern "C" fn move_trampoline<T>(this: *mut GtkComboBox, scroll_type: ScrollType,
+        f: &Box<Fn(&ComboBox, ScrollType) + 'static>)
+where T: IsA<ComboBox> + IsA<Object> {
+    callback_guard!();
+    f(&from_glib_none(this), scroll_type);
 }

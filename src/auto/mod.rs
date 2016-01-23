@@ -125,6 +125,7 @@ pub use self::color_chooser_widget::ColorChooserWidget;
 mod combo_box;
 pub use self::combo_box::ComboBox;
 pub use self::combo_box::ComboBoxExt;
+pub use self::combo_box::ComboBoxSignals;
 
 mod combo_box_text;
 pub use self::combo_box_text::ComboBoxText;

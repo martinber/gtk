@@ -1002,7 +1002,7 @@ mod button {
         f(&from_glib_none(this));
     }
 }
-
+/*
 pub trait ComboBoxSignals {
     fn connect_changed<F: Fn(&Self) + 'static>(&self, f: F) -> u64;
     fn connect_move_active<F: Fn(&Self, ScrollType) + 'static>(&self, f: F) -> u64;
@@ -1074,7 +1074,7 @@ mod combobox {
         f(&from_glib_none(this), scroll_type);
     }
 }
-
+*/
 pub trait ToolButtonSignals {
     fn connect_clicked<F: Fn(&Self) + 'static>(&self, f: F) -> u64;
 }

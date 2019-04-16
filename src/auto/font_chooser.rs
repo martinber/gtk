@@ -2,14 +2,10 @@
 // from gir-files (https://github.com/gtk-rs/gir-files)
 // DO NOT EDIT
 
-#[cfg(any(feature = "v3_22_30", feature = "dox"))]
+#[cfg(any(feature = "v3_24", feature = "dox"))]
 use FontChooserLevel;
 use ffi;
 use glib::GString;
-#[cfg(any(feature = "v3_22_30", feature = "dox"))]
-use glib::StaticType;
-#[cfg(any(feature = "v3_22_30", feature = "dox"))]
-use glib::Value;
 use glib::object::Cast;
 use glib::object::IsA;
 use glib::signal::SignalHandlerId;
@@ -18,6 +14,8 @@ use glib::translate::*;
 use glib_ffi;
 #[cfg(any(feature = "v3_22_30", feature = "dox"))]
 use gobject_ffi;
+use glib_sys;
+use gtk_sys;
 use libc;
 use pango;
 use std::boxed::Box as Box_;
@@ -101,13 +99,13 @@ pub trait FontChooserExt: 'static {
 
     fn connect_property_font_desc_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
-    #[cfg(any(feature = "v3_22_30", feature = "dox"))]
+    #[cfg(any(feature = "v3_24", feature = "dox"))]
     fn connect_property_font_features_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
-    #[cfg(any(feature = "v3_22_30", feature = "dox"))]
+    #[cfg(any(feature = "v3_24", feature = "dox"))]
     fn connect_property_language_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
-    #[cfg(any(feature = "v3_22_30", feature = "dox"))]
+    #[cfg(any(feature = "v3_24", feature = "dox"))]
     fn connect_property_level_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
 
     fn connect_property_preview_text_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId;
@@ -322,7 +320,7 @@ impl<O: IsA<FontChooser>> FontChooserExt for O {
         }
     }
 
-    #[cfg(any(feature = "v3_22_30", feature = "dox"))]
+    #[cfg(any(feature = "v3_24", feature = "dox"))]
     fn connect_property_font_features_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe {
             let f: Box_<F> = Box_::new(f);
@@ -331,7 +329,7 @@ impl<O: IsA<FontChooser>> FontChooserExt for O {
         }
     }
 
-    #[cfg(any(feature = "v3_22_30", feature = "dox"))]
+    #[cfg(any(feature = "v3_24", feature = "dox"))]
     fn connect_property_language_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe {
             let f: Box_<F> = Box_::new(f);
@@ -340,7 +338,7 @@ impl<O: IsA<FontChooser>> FontChooserExt for O {
         }
     }
 
-    #[cfg(any(feature = "v3_22_30", feature = "dox"))]
+    #[cfg(any(feature = "v3_24", feature = "dox"))]
     fn connect_property_level_notify<F: Fn(&Self) + 'static>(&self, f: F) -> SignalHandlerId {
         unsafe {
             let f: Box_<F> = Box_::new(f);

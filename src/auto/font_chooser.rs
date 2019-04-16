@@ -14,8 +14,6 @@ use glib::translate::*;
 use glib_ffi;
 #[cfg(any(feature = "v3_22_30", feature = "dox"))]
 use gobject_ffi;
-use glib_sys;
-use gtk_sys;
 use libc;
 use pango;
 use std::boxed::Box as Box_;
